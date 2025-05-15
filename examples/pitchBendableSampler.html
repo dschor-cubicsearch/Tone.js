@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Pitch Bendable Sampler</title>
+
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="174x174"
+			href="./favicon.png"
+		/>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.4.3/webcomponents-bundle.js"></script>
+		<link
+			href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
+			rel="stylesheet"
+		/>
+		<script src="../build/Tone.js"></script>
+		<script src="./js/tone-ui.js"></script>
+		<script src="./js/components.js"></script>
+	</head>
+	<body>
+		<style>
+			tone-piano {
+				margin-bottom: 10px;
+			}
+			
+			#pitch-bend-container {
+				margin: 20px 0;
+				padding: 10px;
+				background-color: #f5f5f5;
+				border-radius: 4px;
+			}
+			
+			#pitch-bend-slider {
+				width: 100%;
+			}
+			
+			#pitch-bend-value {
+				font-size: 14px;
+				margin-bottom: 10px;
+			}
+			
+			#pitch-bend-range {
+				margin-top: 10px;
+			}
+		</style>
+		<tone-example label="Pitch Bendable Sampler">
+			<tone-loader></tone-loader>
+
+			<div slot="explanation">
+				<a href="#" target="_blank">PitchBendableSampler</a>
+				extends the standard Tone.Sampler to support pitch bending.
+				This allows for expressive control over sample playback, 
+				enabling effects like vibrato, glissando, and subtle intonation adjustments.
+				Adjust the slider below to bend the pitch up or down.
+			</div>
+
+			<div id="content">
+				<div id="pitch-bend-container">
+					<div id="pitch-bend-value">Pitch Bend: 0</div>
+					<input id="pitch-bend-slider" type="range" min="-100" max="100" value="0">
+					<div id="pitch-bend-range">
+						<label for="bend-range">Pitch Bend Range (semitones): </label>
+						<select id="bend-range">
+							<option value="2">2</option>
+							<option value="7">7</option>
+							<option value="12">12</option>
+							<option value="24">24</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</tone-example>
+
+		<script type="text/javascript">
+			// Create a new PitchBendableSampler instance
+			const pitchBendSampler = new Tone.PitchBendableSampler({
+				urls: {
+					A0: "A0.mp3",
+					C1: "C1.mp3",
+					"D#1": "Ds1.mp3",
+					"F#1": "Fs1.mp3",
+					A1: "A1.mp3",
+					C2: "C2.mp3",
+					"D#2": "Ds2.mp3",
+					"F#2": "Fs2.mp3",
+					A2: "A2.mp3",
+					C3: "C3.mp3",
+					"D#3": "Ds3.mp3",
+					"F#3": "Fs3.mp3",
+					A3: "A3.mp3",
+					C4: "C4.mp3",
+					"D#4": "Ds4.mp3",
+					"F#4": "Fs4.mp3",
+					A4: "A4.mp3",
+					C5: "C5.mp3",
+					"D#5": "Ds5.mp3",
+					"F#5": "Fs5.mp3",
+					A5: "A5.mp3",
+					C6: "C6.mp3",
+					"D#6": "Ds6.mp3",
+					"F#6": "Fs6.mp3",
+					A6: "A6.mp3",
+					C7: "C7.mp3",
+					"D#7": "Ds7.mp3",
+					"F#7": "Fs7.mp3",
+					A7: "A7.mp3",
+					C8: "C8.mp3",
+				},
+				release: 1,
+				baseUrl: "https://tonejs.github.io/audio/salamander/",
+			}).toDestination();
+
+			// Set up the piano keyboard
+			piano({
+				parent: document.querySelector("#content"),
+				noteon: (note) => pitchBendSampler.triggerAttack(note.name),
+				noteoff: (note) => pitchBendSampler.triggerRelease(note.name),
+			});
+			
+			// Set up the pitch bend slider
+			const pitchBendSlider = document.getElementById("pitch-bend-slider");
+			const pitchBendValue = document.getElementById("pitch-bend-value");
+			const bendRangeSelect = document.getElementById("bend-range");
+			
+			// Initialize the pitch bend range
+			pitchBendSampler.setPitchBendRange(parseInt(bendRangeSelect.value));
+			
+			// Update pitch bend when slider changes
+			pitchBendSlider.addEventListener("input", function() {
+				const value = parseInt(this.value) / 100;
+				pitchBendSampler.setPitchBend(value);
+				pitchBendValue.textContent = `Pitch Bend: ${value.toFixed(2)}`;
+			});
+			
+			// Update pitch bend range when select changes
+			bendRangeSelect.addEventListener("change", function() {
+				pitchBendSampler.setPitchBendRange(parseInt(this.value));
+			});
+		</script>
+	</body>
+</html> 

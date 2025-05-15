@@ -186,6 +186,35 @@ Tone.loaded().then(() => {
 });
 ```
 
+## Tone.PitchBendableSampler
+
+For more expressive sample-based instruments, `Tone.PitchBendableSampler` extends the standard Sampler with pitch bending capabilities. This allows for effects like vibrato, glissando, and expressive intonation adjustments.
+
+```javascript
+const pitchBendSampler = new Tone.PitchBendableSampler({
+	urls: {
+		C4: "C4.mp3",
+		"D#4": "Ds4.mp3",
+		"F#4": "Fs4.mp3",
+		A4: "A4.mp3",
+	},
+	release: 1,
+	baseUrl: "https://tonejs.github.io/audio/salamander/",
+}).toDestination();
+
+// Play a note
+pitchBendSampler.triggerAttack("C4");
+
+// Bend the pitch up by a semitone (value between -1 and 1)
+pitchBendSampler.setPitchBend(0.5); 
+
+// Set the pitch bend range in semitones (default is 2)
+pitchBendSampler.setPitchBendRange(12); // 12 semitones = 1 octave range
+
+// Release the note
+pitchBendSampler.triggerRelease("C4");
+```
+
 # Effects
 
 In the above examples, the sources were always connected directly to the `Destination`, but the output of the synth could also be routed through one (or more) effects before going to the speakers.

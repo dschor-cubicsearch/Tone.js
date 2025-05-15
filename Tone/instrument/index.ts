@@ -9,3 +9,4 @@ export * from "./PluckSynth.js";
 export * from "./PolySynth.js";
 export * from "./Sampler.js";
 export * from "./Synth.js";
+export * from "./PitchBendableSampler.js";
